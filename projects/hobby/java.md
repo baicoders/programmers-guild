@@ -1,10 +1,13 @@
-# Java Projects
+# Java Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** a JDK (version 17 or newer; [Eclipse Temurin](https://adoptium.net/) is a good free choice). Check with `java -version`.
 **Editor:** IntelliJ IDEA Community Edition or VS Code with the Java extensions.
 **Tip:** by the Challenge level you should be using a build tool (**Maven** or **Gradle**). Don't commit the `target/` or `build/` folders.
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
+
+> 🚀 **Deploy it (required):** publish each project as a **GitHub Release** with a runnable `.jar` attached, so anyone with Java can download it and run `java -jar`. Put the release link in your README.
 
 ---
 

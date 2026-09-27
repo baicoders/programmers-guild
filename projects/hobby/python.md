@@ -1,10 +1,13 @@
-# Python Projects
+# Python Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** [Python 3](https://www.python.org/downloads/) (3.10 or newer). Check with `python --version` or `python3 --version`.
 **Tip:** from the intermediate level on, learn to use a **virtual environment** (`venv`) and a `requirements.txt`, even when you
 have no dependencies yet. It's a habit every Python job expects.
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
+
+> 🚀 **Deploy it (required):** command-line projects are published as a **GitHub Release** with install and run instructions (stretch: a standalone executable built with a tool like PyInstaller). The web app must be **live** on a free hosting service that supports Python. Put the link in your README.
 
 ---
 

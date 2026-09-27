@@ -1,10 +1,13 @@
-# Go Projects
+# Go Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** [Go](https://go.dev/dl/) 1.21 or newer. Check with `go version`.
 **Tip:** start every project with `go mod init github.com/<your-username>/<repo-name>`. Run `gofmt` (or let your editor do it).
 Go developers expect formatted code.
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
+
+> 🚀 **Deploy it (required):** command-line tools are published as a **GitHub Release** with binaries for Windows, macOS and Linux (Go cross-compiles easily: research `GOOS` and `GOARCH`). Web services must be **live** on a free hosting service. Put the link in your README.
 
 ---
 

@@ -1,4 +1,4 @@
-<!-- Copy this block into a language file. Delete these comments. See CONTRIBUTING.md for the rules. -->
+<!-- Copy this block into projects/school/<language>.md or projects/hobby/<language>.md. Delete these comments. See CONTRIBUTING.md for the rules. -->
 
 ## 🟢 N. Project Name
 

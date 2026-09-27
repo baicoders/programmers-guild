@@ -1,10 +1,13 @@
-# C++ Projects
+# C++ Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** a C++ compiler. Options: **g++** (via MinGW-w64 or MSYS2 on Windows, or built in on Linux), **clang++** (macOS
 via Xcode Command Line Tools), or **MSVC** (Visual Studio). Check with `g++ --version` or `clang++ --version`.
 **Tip:** compile with warnings on (`-Wall -Wextra`) and treat every warning as a bug. Don't commit compiled binaries (`.exe`, `a.out`, `.o`).
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
+
+> 🚀 **Deploy it (required):** publish each project as a **GitHub Release** with a compiled program for at least one operating system attached, plus build instructions for the others. Put the release link in your README.
 
 ---
 

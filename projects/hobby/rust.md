@@ -1,11 +1,14 @@
-# Rust Projects
+# Rust Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** Rust via [rustup](https://rustup.rs/). Check with `cargo --version`.
 **Tip:** Rust's compiler errors are famously helpful, so read them fully and follow their suggestions. Run `cargo fmt` and
 `cargo clippy` before every commit. `cargo new` already gives you a `.gitignore`.
 **Reference:** [The Rust Book](https://doc.rust-lang.org/book/) is free and excellent. Use it to learn concepts, but don't copy its example projects.
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
+
+> 🚀 **Deploy it (required):** publish each project as a **GitHub Release** with a `--release` build attached for at least one operating system. Put the release link in your README.
 
 ---
 

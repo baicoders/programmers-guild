@@ -1,13 +1,16 @@
-# PHP Projects
+# PHP Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** PHP 8.1 or newer. Check with `php --version`. You can run everything with PHP's built-in server:
 `php -S localhost:8000`. Bundles like **XAMPP** or **Laragon** also work.
 **Rule for this track:** no frameworks (no Laravel or Symfony yet). Learn what they do for you by doing it yourself first.
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
 
 > 🔐 **Security matters in PHP.** Web apps get attacked. Each project below teaches one real security lesson.
 > Treat those requirements as seriously as the features.
+
+> 🚀 **Deploy it (required):** every project must be **live** on a free hosting service that supports PHP (and a database, where needed). Keep passwords and keys in the host's configuration, never in your repo. Put the live link in your README.
 
 ---
 

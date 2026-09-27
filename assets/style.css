@@ -220,6 +220,19 @@ main { outline: none; }
 .board-head h2 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.1rem); }
 .tally { margin: 0; color: var(--ink-2); font-size: .95rem; }
 
+.tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+.track-tab {
+  display: grid; gap: 4px; text-align: left; cursor: pointer;
+  padding: 14px 16px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+}
+.track-tab strong { font: 700 1.12rem/1.2 var(--font-display); }
+.track-tab span { font-size: .88rem; color: var(--ink-2); line-height: 1.4; }
+.track-tab:hover { border-color: var(--ink-2); }
+.track-tab[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.track-tab[aria-pressed="true"] span { color: var(--bg); opacity: .8; }
+@media (max-width: 560px) { .tracks { grid-template-columns: 1fr; } }
+
 .filters {
   position: sticky; top: 59px; z-index: 10;
   display: grid; gap: 12px;
@@ -355,6 +368,12 @@ main { outline: none; }
 .meter-label { display: flex; justify-content: space-between; font-size: .85rem; color: var(--ink-2); margin-bottom: 6px; }
 .meter-bar { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
 .meter-bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: inherit; transition: width .3s; }
+
+.username { display: grid; gap: 6px; margin-bottom: 10px; font-size: .85rem; font-weight: 700; color: var(--ink-2); }
+.username input {
+  font: 400 .92rem var(--font-mono); color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+}
 
 .repo-name {
   display: flex; align-items: center; gap: 8px;

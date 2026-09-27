@@ -1,6 +1,11 @@
 # Contributing a Project Brief
 
-Want to add a new project, or a whole new language track? Great. Please keep it in the spirit of the Guild.
+Want to add a new project, or a whole new language? Great. Please keep it in the spirit of the Guild.
+
+Briefs live in two folders:
+
+- `projects/school/`: school-themed systems. Students build these inside the baicoders org.
+- `projects/hobby/`: projects for fun. Students build these on their personal GitHub and must deploy them.
 
 ## The golden rules for briefs
 
@@ -13,7 +18,7 @@ Want to add a new project, or a whole new language track? Great. Please keep it 
 ## How to add one
 
 1. Copy [`projects/_TEMPLATE.md`](projects/_TEMPLATE.md).
-2. Add it to the right language file in `projects/`, or create a new language file.
+2. Add it to the right language file in `projects/school/` or `projects/hobby/`, or create a new language file in **both** folders.
 3. Add it to the **Project Catalog** table in the [README](README.md).
 4. Open a Pull Request explaining who the project is for and what it teaches.
 
@@ -26,7 +31,8 @@ step, but it relies on a few formatting rules:
 - The line under it starts with `**Level:** … · **Time:** … · **Repo name:** \`repo-name\``.
 - Sections use `### The mission`, `### Requirements`, `### Things to research`, and so on.
 - Requirements are `- [ ]` checkboxes. Students tick them on the website.
-- **New language?** Also add it to the `LANGUAGES` list at the top of `assets/app.js`.
+- **New language?** Create `projects/school/<id>.md` **and** `projects/hobby/<id>.md`, then add it to the `LANGUAGES` list at the top of `assets/app.js`.
+- School briefs should use fake data only and fit a real school setting. Hobby briefs keep the language's deploy rule in the file intro.
 
 To preview your change, serve the repository folder and open it in a browser:
 
@@ -44,5 +50,13 @@ The site is plain static files, so **GitHub Pages** can host it for free:
 2. Under **Build and deployment**, choose **Deploy from a branch**, pick `main` and the `/ (root)` folder, and save.
 3. After a minute, the site is live at **https://baicoders.github.io/programmers-guild/**.
 4. Put that link in the repository's **About** section as well (the README already links to it).
+
+### Let students create school repos in the org
+
+School projects are created **inside** the baicoders org, so members need permission to create repositories:
+
+1. Go to the org's **Settings → Member privileges**.
+2. Under **Repository creation**, allow members to create repositories (public, private, or both, depending on whether school work should be visible outside the org).
+3. Consider giving teachers a **team** with read access to all repositories, so they can review submissions.
 
 Every merged pull request updates the site automatically. The empty `.nojekyll` file tells GitHub Pages to serve the Markdown files as they are.

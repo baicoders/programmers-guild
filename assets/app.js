@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // Adding a language? Create projects/<id>.md and add it here.
+  // Adding a language? Create projects/school/<id>.md and projects/hobby/<id>.md, then add it here.
   const LANGUAGES = [
     { id: 'html-css', name: 'HTML / CSS', ext: '.html' },
     { id: 'javascript', name: 'JavaScript', ext: '.js' },
@@ -12,6 +12,11 @@
     { id: 'php', name: 'PHP', ext: '.php' },
     { id: 'go', name: 'Go', ext: '.go' },
     { id: 'rust', name: 'Rust', ext: '.rs' },
+  ];
+
+  const TRACKS = [
+    { id: 'school', name: 'School projects', where: 'Repo goes in the baicoders org, where your teachers review it.' },
+    { id: 'hobby', name: 'Hobby projects', where: 'Repo goes on your personal GitHub, and it must be deployed.' },
   ];
 
   const LEVELS = {
@@ -32,7 +37,7 @@
     { label: 'Read the guide', href: '#/guide' },
     { label: 'Do the warm-up', href: '#/warm-up' },
     { label: 'Pick a project', href: '#projects' },
-    { label: 'Create your repo', href: 'https://github.com/new' },
+    { label: 'Create your repo' },
     { label: 'Build and commit' },
     { label: 'Push and showcase', href: '#/doc/SHOWCASE.md' },
   ];
@@ -59,11 +64,11 @@
   };
 
   const state = {
-    langs: [],
+    collections: [],
     projects: [],
     warmup: null,
     docs: {},
-    filters: Object.assign({ q: '', lang: 'all', level: 'all', status: 'all' }, store.get('filters', {})),
+    filters: Object.assign({ q: '', track: 'school', lang: 'all', level: 'all', status: 'all' }, store.get('filters', {})),
   };
 
   // ---------- Helpers ----------
@@ -131,7 +136,7 @@
     return { levelText, time, repo, content, mission, haystack };
   }
 
-  function parseLanguage(md, lang) {
+  function parseCollection(md, lang, track) {
     const lines = md.split(/\r?\n/);
     const heads = [];
     lines.forEach((line, i) => {
@@ -140,20 +145,20 @@
     });
     const introEnd = heads.length ? heads[0].i : lines.length;
     const intro = trimBlock(lines.slice(1, introEnd).filter(l => !l.includes('Back to the board')));
-    const parsed = Object.assign({}, lang, { intro, projects: [] });
+    const parsed = Object.assign({}, lang, { id: `${track.id}/${lang.id}`, langId: lang.id, track, intro, projects: [] });
 
     parsed.projects = heads.map((h, k) => {
       const end = k + 1 < heads.length ? heads[k + 1].i : lines.length;
       const [heading, emoji, num, title] = h.m;
       const brief = parseBrief(trimBlock(lines.slice(h.i + 1, end)));
       return Object.assign(brief, {
-        id: `${lang.id}/${num}`,
+        id: `${track.id}/${lang.id}/${num}`,
         n: Number(num),
         title,
         lang: parsed,
         level: LEVELS[emoji],
         anchor: slugify(heading.replace(/^## /, '')),
-        source: `projects/${lang.id}.md`,
+        source: `projects/${track.id}/${lang.id}.md`,
       });
     });
     return parsed;
@@ -174,13 +179,14 @@
   }
 
   async function loadCatalog() {
+    const pairs = TRACKS.flatMap(track => LANGUAGES.map(lang => ({ track, lang })));
     const [texts, warm] = await Promise.all([
-      Promise.all(LANGUAGES.map(l => fetchText(`projects/${l.id}.md`))),
+      Promise.all(pairs.map(({ track, lang }) => fetchText(`projects/${track.id}/${lang.id}.md`))),
       fetchText('projects/warm-up.md'),
     ]);
-    LANGUAGES.forEach((lang, i) => {
-      const parsed = parseLanguage(texts[i], lang);
-      state.langs.push(parsed);
+    pairs.forEach(({ track, lang }, i) => {
+      const parsed = parseCollection(texts[i], lang, track);
+      state.collections.push(parsed);
       state.projects.push(...parsed.projects);
     });
     state.warmup = parseWarmup(warm);
@@ -207,14 +213,17 @@
 
   function routeFor(path, anchor) {
     if (path === 'README.md') {
-      return anchor === '-project-catalog' ? '#/' : '#/guide' + (anchor ? '/' + anchor : '');
+      if (anchor === '-project-catalog') return '#/';
+      const track = TRACKS.find(t => anchor === `-${t.id}-projects`);
+      if (track) return '#/' + track.id;
+      return '#/guide' + (anchor ? '/' + anchor : '');
     }
     if (path === 'projects/warm-up.md') return '#/warm-up';
-    const m = path.match(/^projects\/([a-z-]+)\.md$/);
-    const lang = m && state.langs.find(l => l.id === m[1]);
-    if (lang) {
-      const p = lang.projects.find(x => x.anchor === anchor);
-      return p ? `#/p/${p.id}` : `#/lang/${lang.id}`;
+    const m = path.match(/^projects\/([a-z]+\/[a-z-]+)\.md$/);
+    const col = m && state.collections.find(c => c.id === m[1]);
+    if (col) {
+      const p = col.projects.find(x => x.anchor === anchor);
+      return p ? `#/p/${p.id}` : `#/lang/${col.id}`;
     }
     if (path.endsWith('.md')) return '#/doc/' + path + (anchor ? '/' + anchor : '');
     return null;
@@ -298,7 +307,8 @@
   }
 
   function matches(p, f) {
-    if (f.lang !== 'all' && p.lang.id !== f.lang) return false;
+    if (p.lang.track.id !== f.track) return false;
+    if (f.lang !== 'all' && p.lang.langId !== f.lang) return false;
     if (f.level !== 'all' && p.level.key !== f.level) return false;
     if (f.status !== 'all' && statusOf(p.id) !== f.status) return false;
     const q = f.q.trim().toLowerCase();
@@ -308,10 +318,9 @@
   }
 
   function renderHome(route) {
-    if (route.lang && state.langs.some(l => l.id === route.lang)) {
-      state.filters.lang = route.lang;
-      store.set('filters', state.filters);
-    }
+    if (route.track && TRACKS.some(t => t.id === route.track)) state.filters.track = route.track;
+    if (route.lang && LANGUAGES.some(l => l.id === route.lang)) state.filters.lang = route.lang;
+    store.set('filters', state.filters);
     const f = state.filters;
     const shipped = state.projects.filter(p => statusOf(p.id) === 'shipped').length;
     const building = state.projects.filter(p => statusOf(p.id) === 'building').length;
@@ -319,7 +328,7 @@
     const tally = [
       shipped && `${plural(shipped)} shipped`,
       building && `${plural(building)} in progress`,
-    ].filter(Boolean).join(' · ') || `${state.projects.length} projects in ${state.langs.length} languages`;
+    ].filter(Boolean).join(' · ') || `${state.projects.length} projects in ${LANGUAGES.length} languages`;
 
     const chip = (group, value, label, extra = '') =>
       `<button type="button" class="chip ${extra}" data-filter="${group}" data-value="${esc(value)}" aria-pressed="${f[group] === value}">${label}</button>`;
@@ -327,7 +336,7 @@
     main.innerHTML = `
       <section class="hero wrap">
         <h1>Pick a project. Own the repo. <span class="push">Push it to GitHub.</span></h1>
-        <p class="lede">Each brief tells you what to build, never how. You create the repository on your own account, write every line yourself, and ship it the way developers do at work.</p>
+        <p class="lede">Each brief tells you what to build, never how. <strong>School projects</strong> are systems a school would use, and they live in the baicoders org where your teachers review them. <strong>Hobby projects</strong> are for fun, and they live on your own GitHub, deployed for anyone to use.</p>
         <div class="journey" id="journey">${journeyHTML()}</div>
       </section>
 
@@ -336,12 +345,17 @@
           <h2 id="board-title">Projects</h2>
           <p class="tally">${esc(tally)}</p>
         </div>
+        <div class="tracks" role="group" aria-label="Track">
+          ${TRACKS.map(t => `<button type="button" class="track-tab" data-filter="track" data-value="${t.id}" aria-pressed="${f.track === t.id}">
+            <strong>${esc(t.name)}</strong><span>${esc(t.where)}</span>
+          </button>`).join('')}
+        </div>
         <div class="filters">
           <input class="search" type="search" placeholder="Search by name, language or concept, e.g. “sqlite” or “api”" value="${esc(f.q)}" aria-label="Search projects">
           <div class="filter-row">
             <div class="chips" role="group" aria-label="Language">
               ${chip('lang', 'all', 'All')}
-              ${state.langs.map(l => chip('lang', l.id, esc(l.ext), 'ext-chip')).join('')}
+              ${LANGUAGES.map(l => chip('lang', l.id, esc(l.ext), 'ext-chip')).join('')}
             </div>
           </div>
           <div class="filter-row">
@@ -390,10 +404,12 @@
     const f = state.filters;
     const results = main.querySelector('.results');
     const hits = state.projects.filter(p => matches(p, f));
+    const inTrack = state.projects.filter(p => p.lang.track.id === f.track).length;
+    const trackName = TRACKS.find(t => t.id === f.track).name.toLowerCase();
     const filtered = f.q || f.lang !== 'all' || f.level !== 'all' || f.status !== 'all';
     main.querySelector('.count').textContent = filtered
-      ? `Showing ${hits.length} of ${state.projects.length} projects`
-      : `Showing all ${state.projects.length} projects`;
+      ? `Showing ${hits.length} of ${inTrack} ${trackName}`
+      : `Showing all ${inTrack} ${trackName}`;
 
     const w = state.warmup;
     const showWarmup = !filtered && statusOf('warm-up') !== 'shipped';
@@ -412,11 +428,11 @@
       return;
     }
 
-    const groups = state.langs
-      .map(l => ({ lang: l, items: hits.filter(p => p.lang.id === l.id) }))
+    const groups = state.collections
+      .map(c => ({ col: c, items: hits.filter(p => p.lang === c) }))
       .filter(g => g.items.length)
-      .map(g => `<section class="group" aria-labelledby="g-${g.lang.id}">
-          <div class="group-head"><h3 id="g-${g.lang.id}">${esc(g.lang.name)}</h3><span>${g.items.length} of ${g.lang.projects.length}</span></div>
+      .map(g => `<section class="group" aria-labelledby="g-${g.col.langId}">
+          <div class="group-head"><h3 id="g-${g.col.langId}">${esc(g.col.name)}</h3><span>${g.items.length} of ${g.col.projects.length}</span></div>
           <div class="grid">${g.items.map(cardHTML).join('')}</div>
         </section>`).join('');
     results.innerHTML = warmup + groups;
@@ -427,7 +443,9 @@
     const idx = siblings.indexOf(p);
     const prev = siblings[idx - 1];
     const next = siblings[idx + 1];
-    const langCrumb = p.id === 'warm-up' ? '' : `<a href="#/lang/${p.lang.id}">${esc(p.lang.name)}</a><span aria-hidden="true">/</span>`;
+    const langCrumb = p.id === 'warm-up' ? '' :
+      `<a href="#/${p.lang.track.id}">${esc(TRACKS.find(t => t.id === p.lang.track.id).name)}</a><span aria-hidden="true">/</span>` +
+      `<a href="#/lang/${p.lang.id}">${esc(p.lang.name)}</a><span aria-hidden="true">/</span>`;
     const repoLink = REPO_URL
       ? `<p><a href="${REPO_URL}/issues/new?template=help-request.md" target="_blank" rel="noopener">Stuck? Ask for help</a> · <a href="${REPO_URL}/blob/main/${p.source}" target="_blank" rel="noopener">View this brief on GitHub</a></p>`
       : `<p>Stuck for more than 30 minutes? Open a Help Request issue in the Guild repository.</p>`;
@@ -452,16 +470,7 @@
                 <div class="meter-bar"><i></i></div>
               </div>
             </section>
-            <section class="panel">
-              <h2>Start your repo</h2>
-              <div class="repo-name"><code><span class="you">your-username/</span>${esc(p.repo)}</code><button type="button" class="copy-btn">Copy</button></div>
-              <ol class="steps">
-                <li><span>Create a <strong>public</strong> repo with this name on <a href="https://github.com/new" target="_blank" rel="noopener">your own account</a>.</span></li>
-                <li><span>Clone it, build the requirements, and commit as you go.</span></li>
-                <li><span>Push, then check the <a href="#/guide/-definition-of-done">Definition of Done</a>.</span></li>
-                <li><span>Add it to the <a href="#/doc/SHOWCASE.md">Showcase</a> with a pull request.</span></li>
-              </ol>
-            </section>
+            ${repoPanelHTML(p)}
             ${p.lang.intro ? `<section class="panel"><h2>Toolkit</h2><div class="toolkit prose"></div></section>` : ''}
             <section class="panel">${repoLink}</section>
           </aside>
@@ -492,16 +501,60 @@
       main.querySelectorAll('[data-status]').forEach(b => b.setAttribute('aria-pressed', b === btn));
     }));
 
+    const userInput = main.querySelector('.username input');
+    const showRepo = () => {
+      const { owner, name } = repoName(p, userInput.value);
+      main.querySelector('.repo-full').innerHTML = `<span class="you">${esc(owner)}/</span>${esc(name)}`;
+    };
+    userInput.addEventListener('input', () => {
+      userInput.value = userInput.value.replace(/[^A-Za-z0-9-]/g, '');
+      store.set('username', userInput.value);
+      showRepo();
+    });
+    showRepo();
+
     const copyBtn = main.querySelector('.copy-btn');
     copyBtn.addEventListener('click', async () => {
       try {
-        await navigator.clipboard.writeText(p.repo);
+        await navigator.clipboard.writeText(repoName(p, userInput.value).name);
         copyBtn.textContent = 'Copied';
       } catch (e) {
         copyBtn.textContent = 'Select it manually';
       }
       setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1600);
     });
+  }
+
+  function isSchool(p) { return Boolean(p.lang.track) && p.lang.track.id === 'school'; }
+
+  // The name to type into GitHub's "Repository name" box, plus who owns the repo.
+  function repoName(p, user) {
+    const u = user || 'your-username';
+    return isSchool(p) ? { owner: 'baicoders', name: `${u}-${p.repo}` } : { owner: u, name: p.repo };
+  }
+
+  function repoPanelHTML(p) {
+    const hobby = Boolean(p.lang.track) && !isSchool(p);
+    const steps = isSchool(p) ? [
+      'Create the repo inside the <a href="https://github.com/organizations/baicoders/repositories/new" target="_blank" rel="noopener">baicoders organization</a> with exactly this name.',
+      'Clone it, build the requirements, and commit as you go.',
+      'Push, then check the <a href="#/guide/-definition-of-done">Definition of Done</a>.',
+      'Send the repo link to your teacher.',
+    ] : [
+      'Create a <strong>public</strong> repo with this name on <a href="https://github.com/new" target="_blank" rel="noopener">your personal account</a>.',
+      'Clone it, build the requirements, and commit as you go.',
+      ...(hobby ? ['<strong>Deploy it</strong> (see Toolkit below) and put the live link in your README.'] : []),
+      'Push, then check the <a href="#/guide/-definition-of-done">Definition of Done</a>.',
+      ...(hobby ? ['Add it to the <a href="#/doc/SHOWCASE.md">Showcase</a> with your live link.'] : []),
+    ];
+    return `<section class="panel">
+      <h2>Start your repo</h2>
+      <label class="username"><span>Your GitHub username</span>
+        <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="your-username" value="${esc(store.get('username', ''))}">
+      </label>
+      <div class="repo-name"><code class="repo-full"></code><button type="button" class="copy-btn" aria-label="Copy repository name">Copy</button></div>
+      <ol class="steps">${steps.map(step => `<li><span>${step}</span></li>`).join('')}</ol>
+    </section>`;
   }
 
   async function renderDoc(path, anchor) {
@@ -550,9 +603,10 @@
     if (!h.startsWith('#/')) return null; // in-page anchor, not a route
     const path = decodeURIComponent(h.slice(2));
     let m;
-    if ((m = path.match(/^p\/([a-z-]+)\/(\d+)$/))) return { name: 'project', id: `${m[1]}/${m[2]}` };
+    if ((m = path.match(/^p\/([a-z]+)\/([a-z-]+)\/(\d+)$/))) return { name: 'project', id: `${m[1]}/${m[2]}/${m[3]}` };
     if (path === 'warm-up') return { name: 'warmup' };
-    if ((m = path.match(/^lang\/([a-z-]+)$/))) return { name: 'home', lang: m[1] };
+    if ((m = path.match(/^(school|hobby)$/))) return { name: 'home', track: m[1], scroll: true };
+    if ((m = path.match(/^lang\/(?:([a-z]+)\/)?([a-z-]+)$/))) return { name: 'home', track: m[1], lang: m[2], scroll: true };
     if ((m = path.match(/^guide(?:\/(.+))?$/))) return { name: 'doc', path: 'README.md', anchor: m[1], nav: 'guide' };
     if ((m = path.match(/^doc\/(.+?\.md)(?:\/(.+))?$/))) return { name: 'doc', path: m[1], anchor: m[2], nav: m[1] === 'SHOWCASE.md' ? 'showcase' : '' };
     return { name: 'notfound' };
@@ -588,7 +642,9 @@
     } else renderNotFound();
     document.title = title;
 
-    if (!route.anchor) window.scrollTo(0, 0);
+    const board = route.scroll && document.getElementById('projects');
+    if (board) board.scrollIntoView();
+    else if (!route.anchor) window.scrollTo(0, 0);
     main.focus({ preventScroll: true });
   }
 

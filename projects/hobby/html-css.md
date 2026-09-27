@@ -1,11 +1,12 @@
-# HTML / CSS Projects
+# HTML / CSS Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** a browser and a code editor. That's it.
 **Rule for this track:** no CSS frameworks (no Bootstrap, no Tailwind). Learn the fundamentals first.
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
 
-> 🚀 **Bonus:** every HTML/CSS project can be hosted for free with **GitHub Pages**. Look it up and put the live link in your README.
+> 🚀 **Deploy it (required):** every project must be live on **GitHub Pages**. Put the live link at the top of your README and in the repo's **About** section.
 
 ---
 

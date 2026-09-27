@@ -1,6 +1,8 @@
 # 🏆 Guild Showcase
 
-Projects built by guild members. Finished one? Add yourself!
+Hobby projects built by guild members, live and ready to try. Finished and deployed one? Add yourself!
+
+(School projects are handed in to your teacher instead. They live in the baicoders org.)
 
 ## How to add your project
 
@@ -12,10 +14,10 @@ This is your last lesson for the project: contributing to someone else's reposit
 4. Open a **Pull Request**. Describe what you built and one thing you learned.
 5. Respond to any review comments. That's normal on real teams too!
 
-**Requirements for being added:** your project meets the [Definition of Done](README.md#-definition-of-done).
+**Requirements for being added:** your project meets the [Definition of Done](README.md#-definition-of-done) and is **deployed**: the Live column must link to a working site or a GitHub Release.
 
 ## Projects
 
-| Member | Project | Language | Level | Repo |
-|---|---|---|---|---|
-| _your-username_ | _Expense Tracker_ | _Python_ | 🟡 | _[link](https://github.com/your-username/python-expense-tracker)_ |
+| Member | Project | Language | Level | Repo | Live |
+|---|---|---|---|---|---|
+| _your-username_ | _Expense Tracker_ | _Python_ | 🟡 | _[repo](https://github.com/your-username/python-expense-tracker)_ | _[release](https://github.com/your-username/python-expense-tracker/releases)_ |

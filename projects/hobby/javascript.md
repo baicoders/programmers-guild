@@ -1,10 +1,13 @@
-# JavaScript Projects
+# JavaScript Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** a browser and a code editor. These are **browser** projects: plain HTML + CSS + JavaScript, with no frameworks
 (no React or Vue yet).
 **Tip:** keep your browser's DevTools **Console** open at all times. It's where your errors show up.
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
+
+> 🚀 **Deploy it (required):** every project must be live on **GitHub Pages**. Put the live link at the top of your README and in the repo's **About** section.
 
 ---
 

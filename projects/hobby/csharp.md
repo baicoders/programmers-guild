@@ -1,11 +1,14 @@
-# C# Projects
+# C# Hobby Projects
 
-[← Back to the board](../README.md)
+[← Back to the board](../../README.md)
 
 **You'll need:** the [.NET SDK](https://dotnet.microsoft.com/download) (8 or newer). Check with `dotnet --version`.
 **Editor:** Visual Studio Community, VS Code with the C# Dev Kit, or JetBrains Rider.
 **Tip:** learn the `dotnet` command line (`dotnet new`, `dotnet run`, `dotnet test`). Don't commit the `bin/` and `obj/` folders.
 Search for "dotnet gitignore".
+**Where it goes:** your **personal** GitHub account (`github.com/<your-username>/<repo-name>`). These projects are yours to keep and show off.
+
+> 🚀 **Deploy it (required):** console and desktop apps are published as a **GitHub Release** with builds from `dotnet publish` attached. The Notes API must be **live** on a free hosting service that supports .NET. Put the link in your README.
 
 ---
 
