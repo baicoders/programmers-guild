@@ -59,4 +59,8 @@ School projects are created **inside** the baicoders org, so members need permis
 2. Under **Repository creation**, allow members to create repositories (public, private, or both, depending on whether school work should be visible outside the org).
 3. Consider giving teachers a **team** with read access to all repositories, so they can review submissions.
 
-Every merged pull request updates the site automatically. The empty `.nojekyll` file tells GitHub Pages to serve the Markdown files as they are.
+Every merged pull request updates the site automatically.
+
+**Changed `assets/app.js` or `assets/style.css`?** Bump the `?v=` number on both links in `index.html` (e.g. `?v=2` → `?v=3`).
+GitHub Pages lets browsers cache files for 10 minutes, and without a new number some visitors will get the old script,
+which may no longer match the Markdown files. The empty `.nojekyll` file tells GitHub Pages to serve the Markdown files as they are.
