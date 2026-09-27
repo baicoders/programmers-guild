@@ -1,0 +1,48 @@
+# Contributing a Project Brief
+
+Want to add a new project, or a whole new language track? Great. Please keep it in the spirit of the Guild.
+
+## The golden rules for briefs
+
+1. **Describe the *what*, never the *how*.** Requirements say what the finished project does. They don't say which functions to write.
+2. **No solution code.** Sample *output* is fine (it clarifies the spec). Sample *implementation* is not.
+3. **Hints nudge, they don't solve.** A good hint is a question, a concept to search, or a warning about a common trap. Always put hints inside `<details>` so students choose to open them.
+4. **Keep it small.** A Beginner project should take hours, not weeks. If a requirement list is longer than ~8 items, split the project.
+5. **Teach one real-world lesson.** Every project should leave students with something professionals care about: validation, persistence, testing, security, concurrency, accessibility…
+
+## How to add one
+
+1. Copy [`projects/_TEMPLATE.md`](projects/_TEMPLATE.md).
+2. Add it to the right language file in `projects/`, or create a new language file.
+3. Add it to the **Project Catalog** table in the [README](README.md).
+4. Open a Pull Request explaining who the project is for and what it teaches.
+
+## Keep the format: the website reads it
+
+The project website (`index.html`) builds itself from these Markdown files every time someone loads it. There's no build
+step, but it relies on a few formatting rules:
+
+- Each project heading is exactly `## <🟢|🟡|🔴> <number>. <Title>`.
+- The line under it starts with `**Level:** … · **Time:** … · **Repo name:** \`repo-name\``.
+- Sections use `### The mission`, `### Requirements`, `### Things to research`, and so on.
+- Requirements are `- [ ]` checkboxes. Students tick them on the website.
+- **New language?** Also add it to the `LANGUAGES` list at the top of `assets/app.js`.
+
+To preview your change, serve the repository folder and open it in a browser:
+
+```bash
+python -m http.server 8000
+```
+
+Then visit `http://localhost:8000`. (Opening `index.html` directly from disk won't work, because browsers block it from reading the Markdown files.)
+
+## Publishing the website (maintainers)
+
+The site is plain static files, so **GitHub Pages** can host it for free:
+
+1. In the repository, go to **Settings → Pages**.
+2. Under **Build and deployment**, choose **Deploy from a branch**, pick `main` and the `/ (root)` folder, and save.
+3. After a minute, the site is live at **https://baicoders.github.io/programmers-guild/**.
+4. Put that link in the repository's **About** section as well (the README already links to it).
+
+Every merged pull request updates the site automatically. The empty `.nojekyll` file tells GitHub Pages to serve the Markdown files as they are.
